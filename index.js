@@ -1,3 +1,5 @@
+require('dotenv').config(); // Load environment variables from .env
+
 const puppeteer = require('puppeteer-extra');
 const StealthPlugin = require('puppeteer-extra-plugin-stealth');
 const axios = require('axios');
@@ -8,13 +10,13 @@ const { v4: uuidv4 } = require('uuid');
 // Add stealth plugin to avoid detection
 puppeteer.use(StealthPlugin());
 
-// Config
+// Config - Now Using Environment Variables
 const CONFIG = {
-  TELEGRAM_BOT_TOKEN: '7787351426:AAFPs0Gc33Df69CsJpm9kuO5qNfibqac5MY',
-  TELEGRAM_CHAT_ID: '5577147235',
-  SCRAPE_INTERVAL_MINUTES: 30,
-  DATA_DIR: path.join(__dirname, 'data'),
-  MAX_CONCURRENT_TABS: 3,
+  TELEGRAM_BOT_TOKEN: process.env.TELEGRAM_BOT_TOKEN,
+  TELEGRAM_CHAT_ID: process.env.TELEGRAM_CHAT_ID,
+  SCRAPE_INTERVAL_MINUTES: parseInt(process.env.SCRAPE_INTERVAL_MINUTES, 10) || 30,
+  DATA_DIR: path.join(__dirname, process.env.DATA_DIR || 'data'),
+  MAX_CONCURRENT_TABS: parseInt(process.env.MAX_CONCURRENT_TABS, 10) || 3,
   BROWSER_ARGS: [
     '--no-sandbox',
     '--disable-setuid-sandbox',
@@ -24,6 +26,7 @@ const CONFIG = {
     '--window-size=1920,1080'
   ]
 };
+
 
 // Enhanced target sites with customized selectors and wait strategy
 const targetSites = [
